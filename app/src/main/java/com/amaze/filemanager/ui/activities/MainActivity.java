@@ -110,6 +110,7 @@ import com.amaze.filemanager.filesystem.ftp.NetCopyClientConnectionPool;
 import com.amaze.filemanager.filesystem.ftp.NetCopyConnectionInfo;
 import com.amaze.filemanager.filesystem.ssh.SshClientUtils;
 import com.amaze.filemanager.ui.ExtensionsKt;
+import com.amaze.filemanager.ui.JacocoHelper;
 import com.amaze.filemanager.ui.activities.superclasses.PermissionsActivity;
 import com.amaze.filemanager.ui.dialogs.AlertDialog;
 import com.amaze.filemanager.ui.dialogs.GeneralDialogCreation;
@@ -183,6 +184,7 @@ import android.os.storage.StorageManager;
 import android.os.storage.StorageVolume;
 import android.service.quicksettings.TileService;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -343,11 +345,12 @@ public class MainActivity extends PermissionsActivity
   private static final String INTENT_ACTION_OPEN_FTP_SERVER = "com.amaze.filemanager.openFTPServer";
   private static final String INTENT_ACTION_OPEN_APP_MANAGER =
       "com.amaze.filemanager.openAppManager";
-
   /** Called when the activity is first created. */
   @Override
   public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Log.d("JacocoHelper","create!!!!!");
+
     setContentView(R.layout.main_toolbar);
 
     intent = getIntent();
@@ -1333,6 +1336,11 @@ public class MainActivity extends PermissionsActivity
   @Override
   protected void onPause() {
     super.onPause();
+    JacocoHelper  helper = new JacocoHelper(this);
+    Log.d("JacocoHelper", "準備輸出 coverage.ec 檔案...");
+    helper.generateEcFile(true);   // 👉 在 Activity 銷毀時產生 coverage 檔案 (.ec)
+    Log.d("JacocoHelper", "輸出 coverage.ec 檔案...");
+
     unregisterReceiver(mainActivityHelper.mNotificationReceiver);
     unregisterReceiver(receiver2);
 
@@ -1457,6 +1465,10 @@ public class MainActivity extends PermissionsActivity
     super.onDestroy();
     // TODO: 6/5/2017 Android may choose to not call this method before destruction
     // TODO: https://developer.android.com/reference/android/app/Activity.html#onDestroy%28%29
+    JacocoHelper  helper = new JacocoHelper(this);
+    Log.d("JacocoHelper", "準備輸出 coverage.ec 檔案...");
+    helper.generateEcFile(true);   // 👉 在 Activity 銷毀時產生 coverage 檔案 (.ec)
+    Log.d("JacocoHelper", "輸出 coverage.ec 檔案...");
     closeInteractiveShell();
     NetCopyClientConnectionPool.INSTANCE.shutdown();
     if (drawer != null && drawer.getBilling() != null) {

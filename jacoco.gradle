@@ -1,9 +1,44 @@
 apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
 android {
     buildTypes {
         debug {
             /**打开覆盖率统计开关**/
             testCoverageEnabled = true
+        }
+    }
+}
+
+
+task jacocoTestReport(type: JacocoReport) {
+    dependsOn 'testDebugUnitTest' // 或 'connectedDebugAndroidTest'
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*']
+    def debugTree = fileTree(dir: "$buildDir/intermediates/javac/debug", excludes: fileFilter)
+    def kotlinDebugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+
+    sourceDirectories.setFrom files(['src/main/java', 'src/main/kotlin'])
+    classDirectories.setFrom files([debugTree, kotlinDebugTree])
+    executionData.setFrom files("$buildDir/outputs/code_coverage/debugAndroidTest/connected/coverage.ec")
+}
+
+//初始化Jacoco Task
+tasks.register('jacocoInit') {
+    group = "JacocoReport"
+    doFirst {
+        File file = new File("$buildDir/outputs/")
+        if (!file.exists()) {
+            file.mkdir();
         }
     }
 }
