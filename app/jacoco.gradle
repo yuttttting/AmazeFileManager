@@ -1,0 +1,49 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+android {
+    buildTypes {
+        debug {
+            /**打开覆盖率统计开关**/
+            testCoverageEnabled = true
+        }
+    }
+}
+
+
+//这个就是具体解析ec文件的任务，会根据我们指定的class路径、源码路径、ec路径进行解析输出
+//tasks.register('jacocoTestReport', JacocoReport) {
+//    reports {
+//        xml.required = true
+//        html.required = true
+//    }
+//// 源代码路径，有多少个module，就在这里写多少个路径，如果你只有app一个module，那么就写一个就可以
+//    def SourceDirs = [
+//            '../app/src/main/java'
+//    ]
+//    sourceDirectories = files(SourceDirs)
+//
+//    classDirectories = fileTree(
+//            //class文件路径（以项目 class 文件所在目录为准），如果你只有app一个module，那么就写一个就可以
+//            dir: "$buildDir/intermediates/javac/debug/compileDebugJavaWithJavac/classes",
+//            // 过滤不需要统计的class文件
+//            excludes: ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*']
+//    )
+//    executionData = files(
+//            "$buildDir/outputs/code_coverage/coverage.ec"
+//    )
+//}
+
+//初始化Jacoco Task
+tasks.register('jacocoInit') {
+    group = "JacocoReport"
+    doFirst {
+        File file = new File("$buildDir/outputs/code_coverage/")
+        if (!file.exists()) {
+            file.mkdir();
+        }
+    }
+}

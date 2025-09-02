@@ -223,7 +223,7 @@ public class MainActivity extends PermissionsActivity
         LoaderManager.LoaderCallbacks<Cursor>,
         FolderChooserDialog.FolderCallback,
         PermissionsActivity.OnPermissionGranted {
-
+  private static AboutActivity instance;
   private static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
   public static final Pattern DIR_SEPARATOR = Pattern.compile("/");

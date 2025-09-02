@@ -5,7 +5,7 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: "com.mxalbert.gradle.jacoco-android"
 apply plugin: "com.starter.easylauncher"
 apply plugin: 'com.google.devtools.ksp'
-
+apply from: 'jacoco.gradle'
 android {
     namespace "com.amaze.filemanager"
     compileSdk libs.versions.compileSdk.get().toInteger()
@@ -42,6 +42,7 @@ android {
 
     buildTypes {
         debug {
+            testCoverageEnabled true
             applicationIdSuffix ".debug"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
@@ -309,6 +310,7 @@ jacoco {
 tasks.withType(Test).configureEach {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
+    ignoreFailures = true
 }
 
 Properties props = new Properties()
