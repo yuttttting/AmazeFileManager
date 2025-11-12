@@ -456,6 +456,9 @@ public class MainActivity extends PermissionsActivity
               }
             });
     initStatusBarResources(findViewById(R.id.drawer_layout));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      startLockTask();
+    }
   }
 
   public void invalidateFragmentAndBundle(Bundle savedInstanceState, boolean isCloudRefresh) {
